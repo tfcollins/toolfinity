@@ -68,7 +68,7 @@ server {
     # api + storage -> uvicorn (120s timeout for STL generation)
     location /api/ {
         proxy_pass http://127.0.0.1:8000;
-        proxy_read_timeout 120s;
+        proxy_read_timeout 300s;  # toolfinity: hal-assist traces (was 120s)
         proxy_connect_timeout 10s;
         proxy_send_timeout 30s;
         proxy_set_header Host $host;

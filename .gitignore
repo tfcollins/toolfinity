@@ -56,3 +56,6 @@ htmlcov/
 
 # playwright
 .playwright-mcp
+
+# toolfinity
+deploy/toolfinity.env

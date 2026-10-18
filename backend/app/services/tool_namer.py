@@ -215,6 +215,9 @@ def create_tool_namer(config: ToolNamerConfig | None = None) -> ToolNamer:
         return OllamaToolNamer(config)
     if provider == "openrouter":
         return OpenRouterToolNamer(config)
+    if provider == "hal":  # toolfinity: Claude/Codex via HAL (app/fork)
+        from app.fork.namer import HalToolNamer
+        return HalToolNamer(config)
 
     logger.warning("unsupported tool naming provider '%s'; using fallback labels", provider)
     return FallbackToolNamer()

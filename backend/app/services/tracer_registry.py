@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from app.fork.registry import FORK_TRACER_LABELS  # toolfinity
+
 DEFAULT_LOCAL_TRACERS = ["isnet", "birefnet-lite", "inspyrenet"]
 
 REMBG_MODELS = {
@@ -28,6 +30,7 @@ TRACER_LABELS = {
     "gemini": "Gemini API",
     **LOCAL_MODEL_LABELS,
     **REMOTE_TRACER_LABELS,
+    **FORK_TRACER_LABELS,  # toolfinity
 }
 
 SUPPORTED_TRACERS = frozenset(TRACER_LABELS)
