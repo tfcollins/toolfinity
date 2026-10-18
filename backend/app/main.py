@@ -185,6 +185,9 @@ app.include_router(router, prefix="/api")
 app.include_router(user_router, prefix="/api")
 app.include_router(auth_router, prefix="/api")
 app.include_router(admin_router, prefix="/api")
+from app.fork.routes import router as fork_router  # noqa: E402  toolfinity
+
+app.include_router(fork_router, prefix="/api")  # toolfinity
 
 
 @app.get("/health")

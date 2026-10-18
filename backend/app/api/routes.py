@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 from app.auth import get_user_id, require_instance_admin
 from app.config import ensure_user_dirs, settings
 from app.constants import GF_GRID, MAX_BIN_GRID_CELLS, MAX_BIN_GRID_UNITS
+from app.fork import hooks as fork  # toolfinity
 from app.models.schemas import (
     DEFAULT_SKETCH_NAME,
     BinConfig,
@@ -244,6 +245,8 @@ def _remote_token(tracer_id: str) -> str | None:
 def _get_tracer(tracer_id: str | None = None) -> AITracer:
     """get or create a tracer for the given ID."""
     tid = tracer_id or settings.available_tracers[0]
+    if tid not in _tracers and fork.is_fork_tracer(tid):  # toolfinity
+        _tracers[tid] = fork.build_fork_tracer(tid)
     if tid not in _tracers:
         kind = tracer_kind(tid)
         if kind == "gemini":
@@ -564,6 +567,7 @@ def _build_bin_from_tools(
             points=list(tool.points),
             finger_holes=list(tool.finger_holes),
             interior_rings=list(tool.interior_rings),
+            depth_override=fork.depth_for_tool(user_tools, tool),  # toolfinity
         ))
 
     bc = BinConfig(**default_config.model_dump(exclude={"text_labels"}), text_labels=[]) if default_config else BinConfig()
@@ -1403,6 +1407,7 @@ async def delete_session(request: Request, session_id: str, user_id: str = Depen
         session.stl_path,
     ]:
         _safe_unlink(rel)
+    fork.delete_reference_photos(_abs(session.corrected_image_path))  # toolfinity
 
     if session.stl_path:
         Path(_abs(session.stl_path)).with_suffix(".3mf").unlink(missing_ok=True)
