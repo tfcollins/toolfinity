@@ -17,9 +17,9 @@ class ForkSettings(BaseSettings):
     hal_timeout_seconds: float = 180.0
 
     # per-crop naming (TOOL_LABEL_PROVIDER=hal); codex-default = codex account default
-    name_model: str = "claude-haiku-4-5-20251001"
+    name_model: str = "claude-haiku-5-5"
     # hal-assist mask selection, batch naming and depth
-    assist_model: str = "claude-sonnet-5"
+    assist_model: str = "claude-sonnet-5-5"
     assist_base_tracers: str = "isnet,birefnet-lite"
     assist_image_max_px: int = 1280
 

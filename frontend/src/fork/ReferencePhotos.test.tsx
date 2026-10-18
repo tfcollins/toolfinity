@@ -76,3 +76,20 @@ describe('depthOverrideFor', () => {
     await waitFor(async () => expect(await depthOverrideFor('t1')).toBeUndefined())
   })
 })
+
+describe('ForkTracePanel', () => {
+  afterEach(() => {
+    cleanup()
+    vi.unstubAllGlobals()
+  })
+
+  it('renders nothing unless the hal-assist tracer is configured', async () => {
+    const { ForkTracePanel } = await import('./TracePanel')
+    vi.stubGlobal('fetch', vi.fn(() => jsonResponse({ photos: [], kinds: [], max_photos: 6 })))
+    const { container } = render(<ForkTracePanel sessionId="s1" step="trace" polygonIds={[]} tracerIds={['isnet']} />)
+    expect(container.innerHTML).toBe('')
+    cleanup()
+    render(<ForkTracePanel sessionId="s1" step="trace" polygonIds={[]} tracerIds={['hal-assist', 'isnet']} />)
+    expect(await screen.findByText('Reference photos')).toBeTruthy()
+  })
+})

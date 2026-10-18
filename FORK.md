@@ -75,6 +75,8 @@ Branches:
 - **Clean merge:** opens a PR, so CI runs on the result.
 - **Conflict:** opens an issue listing the conflicting files, because a conflicted PR never triggers CI.
 
+The workflow needs a `SYNC_TOKEN` repository secret: a fine-grained PAT for `tfcollins/toolfinity` with Contents, Pull requests, Issues and Workflows set to read/write. With the default `GITHUB_TOKEN`, sync PRs would start no CI runs, and upstream workflow changes couldn't be pushed. The job fails at its first step if the secret is missing.
+
 To resolve by hand:
 
 ```sh

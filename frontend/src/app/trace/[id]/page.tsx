@@ -658,7 +658,7 @@ export default function TracePage() {
             </div>
           )}
 
-          <ForkTracePanel sessionId={sessionId} step={step} polygonIds={polygons.map(p => p.id)} />{/* toolfinity */}
+          <ForkTracePanel sessionId={sessionId} step={step} polygonIds={polygons.map(p => p.id)} tracerIds={tracers.map(t => t.id)} />{/* toolfinity */}
 
           {!warningsDismissed && (
             <PhotoWarningsBanner

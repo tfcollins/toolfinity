@@ -4,6 +4,10 @@ name: upstream sync
 # merging it into main on a sync branch. a clean merge opens a PR (so CI
 # runs); a conflict opens an issue instead, because a conflicted PR never
 # triggers CI and would sit there looking green.
+#
+# needs secrets.SYNC_TOKEN: a fine-grained PAT on this repo with contents,
+# pull-requests, issues and workflows write. GITHUB_TOKEN won't do: PRs it
+# opens start no CI runs, and it can't push upstream changes to workflows.
 
 on:
   schedule:
@@ -20,9 +24,19 @@ jobs:
     if: github.repository == 'tfcollins/toolfinity'
     runs-on: ubuntu-latest
     steps:
+      - name: require SYNC_TOKEN
+        env:
+          SYNC_TOKEN: ${{ secrets.SYNC_TOKEN }}
+        run: |
+          if [ -z "$SYNC_TOKEN" ]; then
+            echo "::error::secrets.SYNC_TOKEN is not set; see FORK.md (Syncing upstream)"
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN }}
 
       - name: fetch upstream
         run: |
@@ -33,7 +47,7 @@ jobs:
       - name: merge into a sync branch
         id: merge
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -57,7 +71,7 @@ jobs:
       - name: open sync PR
         if: steps.merge.outputs.result == 'clean'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
           BRANCH: ${{ steps.merge.outputs.branch }}
         run: |
           if gh pr view "$BRANCH" --json state -q .state 2>/dev/null | grep -q OPEN; then
@@ -71,7 +85,7 @@ jobs:
       - name: report conflict
         if: steps.merge.outputs.result == 'conflict'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.SYNC_TOKEN }}
         run: |
           {
             echo "Merging \`tracefinity/tracefinity@main\` into \`main\` conflicts in:"

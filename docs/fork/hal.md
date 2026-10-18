@@ -4,7 +4,7 @@ toolfinity talks to HAL through `POST {TOOLFINITY_HAL_URL}/chat/completions`, an
 
 ## Models
 
-- **Claude:** any id that HAL's `/v1/models` lists. The defaults are `claude-sonnet-5` for `hal-assist` and `claude-haiku-4-5-20251001` for per-tool naming.
+- **Claude:** any id the Claude CLI on the HAL host accepts. HAL doesn't check the id against its catalog. The defaults are `claude-sonnet-5-5` for `hal-assist` and `claude-haiku-5-5` for per-tool naming; each named the pliers fixture correctly in about 2.8 s per single-image call.
 - **Codex:** `codex-default` uses the logged-in account's default model. ChatGPT-account logins reject explicit ids such as `gpt-5.5`, so prefer `codex-default` unless HAL runs Codex with an API key.
 
 ## Why a separate endpoint
