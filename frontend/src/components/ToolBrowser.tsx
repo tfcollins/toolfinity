@@ -6,6 +6,7 @@ import { getProject, listTools } from '@/lib/api'
 import type { BinProject, ToolSummary, PlacedTool, Point } from '@/types'
 import { getTool } from '@/lib/api'
 import { polygonPathData } from '@/lib/svg'
+import { depthOverrideFor } from '@/fork/api' // toolfinity
 
 interface Props {
   onAddTool: (tool: PlacedTool) => void
@@ -119,6 +120,7 @@ export function ToolBrowser({ onAddTool, binWidthMm, binHeightMm, layout = 'grid
           ring.map(p => ({ x: p.x + dx, y: p.y + dy }))
         ),
         rotation: 0,
+        depth_override: await depthOverrideFor(tool.id), // toolfinity
       }
       onAddTool(placed)
     } catch {

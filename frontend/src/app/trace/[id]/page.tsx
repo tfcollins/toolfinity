@@ -9,6 +9,7 @@ import { PaperCornerEditor } from '@/components/PaperCornerEditor'
 import { PolygonEditor } from '@/components/PolygonEditor'
 import { SessionInfo } from '@/components/SessionInfo'
 import { Alert } from '@/components/Alert'
+import { ForkTracePanel } from '@/fork/TracePanel' // toolfinity
 import { getSession, setCorners, traceTools, updatePolygons, updateSession, getImageUrl, getAvailableKeys, traceFromMask, saveToolsFromSession } from '@/lib/api'
 import { CornersHint, TraceHint, EditHint } from '@/components/OnboardingIllustrations'
 import { PhotoWarningsBanner } from '@/components/PhotoWarningsBanner'
@@ -656,6 +657,8 @@ export default function TracePage() {
               />
             </div>
           )}
+
+          <ForkTracePanel sessionId={sessionId} step={step} polygonIds={polygons.map(p => p.id)} />{/* toolfinity */}
 
           {!warningsDismissed && (
             <PhotoWarningsBanner
