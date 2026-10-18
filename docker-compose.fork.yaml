@@ -1,0 +1,7 @@
+# toolfinity override: docker compose -f docker-compose.yaml -f docker-compose.fork.yaml up -d
+# copy deploy/toolfinity.env.example to deploy/toolfinity.env and fill it in first.
+services:
+  tracefinity:
+    image: ghcr.io/tfcollins/toolfinity
+    env_file:
+      - deploy/toolfinity.env
